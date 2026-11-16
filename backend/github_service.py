@@ -1,6 +1,20 @@
+import os
 from urllib.parse import urlparse
 import requests
 import time
+
+def get_github_headers():
+    token = os.getenv("GITHUB_TOKEN")
+
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "CodeGuardianAI"
+    }
+
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    return headers
 
 
 def parse_github_url(repository_url: str):
@@ -35,7 +49,11 @@ def parse_github_url(repository_url: str):
 def fetch_repository_info(owner: str, repository: str):
     url = f"https://api.github.com/repos/{owner}/{repository}"
 
-    response = requests.get(url, timeout=10)
+    response = requests.get(
+    url,
+    timeout=10,
+    headers=get_github_headers()
+)
 
     if response.status_code == 404:
         raise ValueError("GitHub repository not found")
@@ -64,7 +82,11 @@ def fetch_repository_info(owner: str, repository: str):
 def fetch_repository_files(owner: str, repository: str, branch: str):
     url = f"https://api.github.com/repos/{owner}/{repository}/git/trees/{branch}?recursive=1"
 
-    response = requests.get(url, timeout=20)
+    response = requests.get(
+    url,
+    timeout=20,
+    headers=get_github_headers()
+)
 
     if response.status_code != 200:
         raise ValueError(
