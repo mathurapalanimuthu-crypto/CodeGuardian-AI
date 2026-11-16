@@ -1231,7 +1231,7 @@ function Repository() {
           Code Review Assistant
         </h2>
         <p>
-        Analyze your source code using a local AI model.
+        Analyze your source code using Google Gemini AI
         Get suggestions for potential bugs, security, and code quality.
         </p>
 
